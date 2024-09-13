@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Possession Tracking Tool</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+    <div class="container mt-3">
+        <h1 class="display-5 font-weight-bold text-center">Possession Tracking Tool</h1>
+
+        <!-- Display opponent name, date, and location in one row -->
+<div class="text-center" id="game-details" style="display: flex; justify-content: center;">
+    <h5 id="opponent-name" class="mx-3"></h5>
+    <h5 id="game-date" class="mx-3"></h5>
+    <h5 id="game-location" class="mx-3"></h5>
+</div>
+
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <h5>Full Roster</h5>
+            <div id="available-players" class="border p-2" style="height: 300px; overflow-y: auto; display: flex; flex-wrap: wrap;">
+                <div class="player-tile" onclick="addPlayer(event)">0</div>
+                <div class="player-tile" onclick="addPlayer(event)">1</div>
+                <div class="player-tile" onclick="addPlayer(event)">2</div>
+                <div class="player-tile" onclick="addPlayer(event)">3</div>
+                <div class="player-tile" onclick="addPlayer(event)">4</div>
+                <div class="player-tile" onclick="addPlayer(event)">5</div>
+                <div class="player-tile" onclick="addPlayer(event)">10</div>
+                <div class="player-tile" onclick="addPlayer(event)">11</div>
+                <div class="player-tile" onclick="addPlayer(event)">12</div>
+                <div class="player-tile" onclick="addPlayer(event)">13</div>
+                <div class="player-tile" onclick="addPlayer(event)">15</div>
+                <div class="player-tile" onclick="addPlayer(event)">20</div>
+                <div class="player-tile" onclick="addPlayer(event)">22</div>
+                <div class="player-tile" onclick="addPlayer(event)">30</div>
+                <div class="player-tile" onclick="addPlayer(event)">32</div>
+                <div class="player-tile" onclick="addPlayer(event)">33</div>
+            </div>
+        </div>
+
+            <div class="col-md-2">
+                <h5>Active Lineup</h5>
+                <div id="active-players" class="border p-2"  style="height: 300px; overflow-y: auto;">
+                </div>
+            </div>
+            <div class="col-md-2"> <!-- Adjusted Actions Section -->
+                <div class="mt-3">
+                    <h5>Change Sides(S)</h5>
+                    <button id="change-sides" class="btn btn-lg btn-side" onclick="incrementChangeSides()">0</button>
+                </div>
+                <div class="mt-3">
+                    <h5>Paint Touches(P)</h5>
+                    <button id="paint-touches" class="btn btn-lg btn-paint" onclick="incrementPaintTouches()">0</button>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="d-flex justify-content-between">
+                    <h5 class="points-total">Points</p>
+                    <h5 id="points-total">0</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="stat-label">2PM</p>
+                    <button class="btn btn-sm btn-2pm" onclick="incrementStat('2pm')">0</button>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="stat-label">2PA</p>
+                    <button class="btn btn-sm btn-2pa" onclick="incrementStat('2pa')">0</button>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="stat-label">3PM</p>
+                    <button class="btn btn-sm btn-3pm" onclick="incrementStat('3pm')">0</button>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="stat-label">3PA</p>
+                    <button class="btn btn-sm btn-3pa" onclick="incrementStat('3pa')">0</button>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="stat-label">FTM</p>
+                    <button class="btn btn-sm btn-ftm" onclick="incrementStat('ftm')">0</button>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="stat-label">FTA</p>
+                    <button class="btn btn-sm btn-fta" onclick="incrementStat('fta')">0</button>
+                </div> 
+            </div>
+            <div class="col-md-2"> <!-- New Section for Fouls and TO -->
+                <h5>Fouls & TO</h5>
+                <div class="d-flex justify-content-between">
+                    <p class="stat-label">Off. Foul</p>
+                    <button class="btn btn-sm btn-offFoul" onclick="incrementStat('offFoul')">0</button>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="stat-label">Def. Foul</p>
+                    <button class="btn btn-sm btn-defFoul" onclick="incrementStat('defFoul')">0</button>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="stat-label">TO</p>
+                    <button class="btn btn-sm btn-turnover" onclick="incrementStat('turnover')">0</button>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="stat-label">Off. Reb</p>
+                    <button class="btn btn-sm btn-offReb" onclick="incrementStat('offReb')">0</button>
+                </div>
+                
+                   
+                <!-- Points Section -->
+                
+            </div>
+            
+
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <h5>Possession Number: <span id="possession-number">1</span></h5>
+            <button id="next-possession" class="btn btn-lg btn-success" onclick="nextPossession()">Next Possession</button>
+        </div>
+
+        <div class="text-center mt-3">
+            <a class="btn btn-primary btn-sm" href="/">Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Retrieve and display game details from local storage
+        document.addEventListener("DOMContentLoaded", function() {
+            const opponent = localStorage.getItem('opponent');
+            const date = localStorage.getItem('date');
+            const location = localStorage.getItem('location');
+
+            document.getElementById('opponent-name').innerText = `Opponent: ${opponent}`;
+            document.getElementById('game-date').innerText = `Date: ${date}`;
+            document.getElementById('game-location').innerText = `Location: ${location}`;
+        });
+    </script>
+</body>
+</html>

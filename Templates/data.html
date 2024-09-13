@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Game Data Averages</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container text-center mt-5">
+        <h1>Filter Game Data</h1>
+
+        <!-- Collapsible Filter Section -->
+        <div id="filterSection">
+            <button class="btn btn-primary btn-block" type="button" data-toggle="collapse" data-target="#filterFormCollapse" aria-expanded="false" aria-controls="filterFormCollapse">
+                Show/Hide Filters
+            </button>
+            <div class="collapse mt-3" id="filterFormCollapse">
+                <form id="filterForm">
+                    <div class="form-group">
+                        <label>Select Date(s):</label>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            {% for date in unique_dates %}
+                                <label class="btn btn-outline-primary">
+                                    <input type="checkbox" name="date" value="{{ date }}"> {{ date }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Select Opponent(s):</label>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            {% for opponent in unique_opponents %}
+                                <label class="btn btn-outline-primary">
+                                    <input type="checkbox" name="opponent" value="{{ opponent }}"> {{ opponent }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+    
+                    <div class="form-group">
+                        <label>Select Location(s):</label>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            {% for location in unique_locations %}
+                                <label class="btn btn-outline-primary">
+                                    <input type="checkbox" name="location" value="{{ location }}"> {{ location }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+    
+                    <button type="submit" class="btn btn-success">Get Averages</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="averages mt-4">
+            <h5>Total Possessions:</h5>
+            <p id="total-possessions" class="lead">-</p>
+        </div>
+        <div class="averages mt-4">
+            <h5>Average Points per Possession:</h5>
+            <p id="avg-points" class="lead">-</p>
+        </div>
+        <div class="averages mt-4">
+            <h5>Average Paint Touches:</h5>
+            <p id="avg-paint-touches" class="lead">-</p>
+        </div>
+        <div class="averages mt-4">
+            <h5>Average Side Changes:</h5>
+            <p id="avg-side-changes" class="lead">-</p>
+        </div>
+
+        <!-- Bar Charts for Paint Touches and Side Changes -->
+        <div class="mt-5">
+            <canvas id="paintTouchesChart" width="400" height="200"></canvas>
+        </div>
+        <div class="mt-5">
+            <canvas id="sideChangesChart" width="400" height="200"></canvas>
+        </div>
+
+        <div class="tile mt-4 p-4">
+            <a class="btn btn-secondary" href="/">Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#filterForm').submit(function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                var dates = [];
+                var opponents = [];
+                var locations = [];
+
+                $('input[name="date"]:checked').each(function() {
+                    dates.push($(this).val());
+                });
+                $('input[name="opponent"]:checked').each(function() {
+                    opponents.push($(this).val());
+                });
+                $('input[name="location"]:checked').each(function() {
+                    locations.push($(this).val());
+                });
+
+                $.get('/get_averages', { date: dates, opponent: opponents, location: locations }, function(data) {
+                    $('#total-possessions').text(data.total_possessions);
+                    $('#avg-points').text(data.average_points_per_possession.toFixed(2));
+                    $('#avg-paint-touches').text(data.average_paint_touches.toFixed(2));
+                    $('#avg-side-changes').text(data.average_side_changes.toFixed(2));
+
+                    // Fetch data for bar charts
+                    fetchBarChartData(dates, opponents, locations);
+                }).fail(function() {
+                    alert("Error fetching data. Please try again.");
+                });
+            });
+
+            function fetchBarChartData(dates, opponents, locations) {
+                // Fetch data for paint touches chart
+                $.get('/paint_touches_impact', { date: dates, opponent: opponents, location: locations }, function(data) {
+                    updateChart('paintTouchesChart', data.labels, data.pointsPerPossession, 'Average Points per Paint Touch');
+                }).fail(function() {
+                    alert("Error fetching data for paint touches chart. Please try again.");
+                });
+
+                // Fetch data for side changes chart
+                $.get('/side_changes_impact', { date: dates, opponent: opponents, location: locations }, function(data) {
+                    updateChart('sideChangesChart', data.labels, data.pointsPerPossession, 'Average Points per Side Change');
+                }).fail(function() {
+                    alert("Error fetching data for side changes chart. Please try again.");
+                });
+            }
+
+            function updateChart(chartId, labels, data, label) {
+                var ctx = document.getElementById(chartId).getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: label,
+                            data: data,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+
+            // Initial fetch for bar charts with default filters
+            fetchBarChartData([], [], []);
+        });
+    </script>
+</body>
+</html>

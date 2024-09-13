@@ -1,0 +1,156 @@
+body {
+    background-color: #ffffff; /* Light background for contrast */
+}
+
+.text-purple {
+    color: #6a4a93; /* Purple */
+}
+
+.tile {
+    background-color: #f9f9f9; /* Light tile background */
+    border: 2px solid #6a4a93; /* Purple border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.btn-gold {
+    background-color: #FFD700; /* Gold */
+    color: #6a4a93; /* Purple text */
+    border: none;
+}
+
+.btn-gold:hover {
+    background-color: #f0c040; /* Lighter gold on hover */
+}
+
+/* Thicker font for headings */
+h1 {
+    font-weight: 700; /* Bold font weight */
+}
+.player-tile {
+    background-color: #6a4a93; /* Purple */
+    color: #FFD700;
+    width: 40px; /* Width of the square */
+    height: 40px; /* Height of the square */
+    display: flex;
+    justify-content: center; /* Center the number horizontally */
+    align-items: center; /* Center the number vertically */
+    margin: 5px; /* Space between squares */
+    border-radius: 5px; /* Slightly rounded corners */
+    cursor: move;
+    font-size: 16px; /* Adjust font size as necessary */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.player-tile:hover {
+    background-color: #4b3b6d; /* Darker purple on hover */
+}
+
+.player-tile.active {
+    background-color: red; /* Red when clicked */
+}
+
+.player-tile.out {
+    background-color: rgb(21, 255, 0); /* Red when clicked */
+}
+
+
+.player-tile button {
+    margin-left: 10px;
+    background-color: #FFD700; /* Gold */
+    border: none;
+    border-radius: 5px;
+    color: #6a4a93; /* Purple text */
+    cursor: pointer;
+}
+
+.player-tile button:hover {
+    background-color: #f0c040; /* Lighter gold on hover */
+}
+
+.btn-2pm, .btn-3pm, .btn-ftm {
+    background-color: #22aa3b; /* Change this to your desired color for 2PM */
+    color: white; /* Change text color if needed */
+    width: 75px;
+    margin-top: 3px;
+}
+
+.btn-2pa, .btn-3pa, .btn-fta {
+    background-color: #d63636; /* Change this to your desired color for 2PM */
+    color: white; /* Change text color if needed */
+    width: 75px;
+    margin-top: 3px;
+}
+
+
+.btn-offFoul {
+    background-color: #d63636; /* Change this to your desired color for 3PM */
+    color: white; /* Change text color if needed */
+    width: 75px;
+    margin-top: 3px;
+}
+
+.btn-defFoul {
+    background-color: #22aa3b; /* Change this to your desired color for 3PM */
+    color: white; /* Change text color if needed */
+    width: 75px;
+    margin-top: 3px;
+}
+
+.btn-turnover {
+    background-color: #d63636; /* Change this to your desired color for 3PM */
+    color: white; /* Change text color if needed */
+    width: 75px;
+    margin-top: 3px;
+}
+
+.btn-offReb {
+    background-color: #22aa3b; /* Change this to your desired color for 3PM */
+    color: white; /* Change text color if needed */
+    width: 75px;
+    margin-top: 3px;
+}
+
+.btn-side {
+    background-color: #0084ff; /* Change this to your desired color for 3PM */
+    color: white; /* Change text color if needed */
+    width: 130px;
+    height: 75px;
+}
+
+.btn-paint {
+    background-color: #0084ff; /* Change this to your desired color for 3PM */
+    color: white; /* Change text color if needed */
+    width: 130px;
+    height: 75px;
+}
+
+.btn:hover {
+    opacity: .8;
+    color: #f9f9f9;
+}
+
+.stat-label {
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.averages {
+    background-color: #f8f9fa; /* Light gray background */
+    border: 1px solid #dee2e6; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    padding: 20px; /* Padding around the content */
+    margin: 10px 0; /* Margin between average sections */
+}
+
+h5 {
+    font-size: 1.5rem; /* Adjust heading size */
+    color: #343a40; /* Dark color for headings */
+}
+
+.lead {
+    font-size: 2rem; /* Larger font size for the averages */
+    color: #007bff; /* Bootstrap primary color */
+    font-weight: bold; /* Bold text */
+}
